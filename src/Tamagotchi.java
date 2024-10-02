@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Tamagotchi {
-    private int hunger = 0;
-    private int boredom = 0;
-    private ArrayList<String> words = new ArrayList<>();
+    private int hunger = 3;
+    private int boredom = 5;
+    private final ArrayList<String> words = new ArrayList<>();
     private boolean isAlive = true;
     public String name;
 
-    private static Random generator = new Random();
+    private static final Random generator = new Random();
 
     public Tamagotchi(String name) {
         this.name = name;
@@ -31,25 +31,29 @@ public class Tamagotchi {
 
     public void speak() {
         var randIndex = generator.nextInt(words.size());
-        System.out.println(words.get(randIndex));
+        System.out.println(name + " says " + words.get(randIndex));
 
         reduceBoredom();
     }
 
-    public void teach(String word) {
-        words.add(word);
+    public void teach(String newWords) {
+        words.add(newWords);
 
         reduceBoredom();
     }
 
     public void printStats() {
         if (isAlive) {
-            System.out.println(name + "is alive with");
+            System.out.println(name + " is alive with");
             System.out.println("Hunger: " + hunger);
             System.out.println("Boredom: " + boredom);
         } else {
             System.out.println(name + " is dead");
         }
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 
     private void reduceHunger() {
