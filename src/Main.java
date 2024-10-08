@@ -3,13 +3,35 @@ import java.util.Scanner;
 
 public class Main {
     private static final Scanner in = new Scanner(System.in);
+    private static Tamagotchi tamagotchi;
 
     public static void main(String[] args) {
         System.out.print("Name your Tamagotchi > ");
         var name = in.nextLine();
 
-        var tamagotchi = new Tamagotchi(name);
+        tamagotchi = new Tamagotchi(name);
 
+        while (true) {
+            tamagotchi.printStats();
+            System.out.println();
+
+            boolean shouldExit;
+
+            if (tamagotchi.isAlive()) {
+                shouldExit = aliveMenu();
+            } else {
+                shouldExit = deadMenu();
+            }
+
+            if (shouldExit) break;
+
+            System.out.println("\n");
+        }
+
+        System.out.println("Goodbye");
+    }
+
+    private static boolean aliveMenu() {
         var choices = new String[]{
                 "Feed",
                 "Speak",
@@ -17,48 +39,62 @@ public class Main {
                 "Wait",
                 "Abandon",
         };
-        loop: while (true) {
-            tamagotchi.printStats();
-            System.out.println();
-            var choice = chooseInMenu(choices);
 
-            switch (choice) {
-                case 0:
-                    tamagotchi.feed();
+        var choice = chooseInMenu(choices);
 
-                    tamagotchi.tick();
-                    break;
+        switch (choice) {
+            case 0:
+                tamagotchi.feed();
 
-                case 1:
-                    tamagotchi.speak();
+                tamagotchi.tick();
+                break;
 
-                    tamagotchi.tick();
-                    break;
+            case 1:
+                tamagotchi.speak();
 
-                case 2:
-                    System.out.print("Teach " + tamagotchi.name + " a new word > ");
-                    var newWord = in.nextLine();
-                    tamagotchi.teach(newWord);
+                tamagotchi.tick();
+                break;
 
-                    tamagotchi.tick();
-                    break;
+            case 2:
+                System.out.print("Teach " + tamagotchi.name + " a new word > ");
+                var newWord = in.nextLine();
+                tamagotchi.teach(newWord);
 
-                case 3:
-                    tamagotchi.tick();
-                    break;
+                tamagotchi.tick();
+                break;
 
-                case 4:
-                    break loop;
-            }
+            case 3:
+                tamagotchi.tick();
+                break;
 
-            if (!tamagotchi.isAlive()) {
-                choices[4] = "Leave";
-            }
-
-            System.out.println("\n");
+            case 4:
+                return true;
         }
 
-        System.out.println("Goodbye");
+        return false;
+    }
+
+    private static boolean deadMenu() {
+        var choices = new String[]{
+                "Get a new Tamagotchi",
+                "Leave",
+        };
+
+        var choice = chooseInMenu(choices);
+
+        switch (choice) {
+            case 0:
+                System.out.print("Name your Tamagotchi > ");
+                var name = in.nextLine();
+
+                tamagotchi = new Tamagotchi(name);
+                break;
+
+            case 1:
+                return true;
+        }
+
+        return false;
     }
 
     private static int chooseInMenu(String[] choices) {
